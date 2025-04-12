@@ -10,6 +10,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import Optional
+from pydantic import BaseModel
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
@@ -44,22 +45,24 @@ async def landing_page(request: Request):
 @app.post("/search")
 async def search_results(
     request: Request,
-    firstName: str = Form(...),
-    lastName: str = Form(...),
-    email: str = Form(...)
+    postcode: str = Form(...),
+    specialty: str = Form(...),
+    insurance_company: str | None = Form(None),
+    procedure: str | None = Form(None)
 ):
     """Handle the search request and show results"""
     # Store user details in session/memory for potential later use
     session_id = str(uuid4())
     user_choices[session_id] = {
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
+        "postcode": postcode,
+        "insurance_company": insurance_company,
+        "specialty": specialty,
+        "procedure": procedure,
         "timestamp": datetime.now(timezone.utc)
     }
 
     # Dummy search function that simulates processing time
-    async def perform_dummy_search(name: str, surname: str) -> dict:
+    async def perform_dummy_search(postcode: str, specialty: str) -> dict:
         await asyncio.sleep(2)  # Simulate processing time
         return {
             "matches_found": 3,
@@ -69,14 +72,16 @@ async def search_results(
         }
     
     # Perform the search
-    search_results = await perform_dummy_search(firstName, lastName)
+    search_results = await perform_dummy_search(postcode, specialty)
     
     response = templates.TemplateResponse(
         "search_results.html",
         {
             "request": request,
-            "user_name": f"{firstName} {lastName}",
-            "email": email,
+            "postcode": postcode,
+            "insurance_company": insurance_company,
+            "specialty": specialty,
+            "procedure": procedure,
             "results": search_results
         }
     )

@@ -13,25 +13,24 @@
             <p>Enter user details to perform a comprehensive search</p>
         </div>
         
-        <form action="/search" method="POST" class="search-form">
+        <form action="/search" method="post">
             <div class="form-group">
-                <label for="firstName">First Name:</label>
-                <input type="text" id="firstName" name="firstName" required>
+                <label for="postcode">Postcode:</label>
+                <input type="text" class="form-control" id="postcode" name="postcode" required>
             </div>
-            
             <div class="form-group">
-                <label for="lastName">Last Name:</label>
-                <input type="text" id="lastName" name="lastName" required>
+                <label for="insurance_company">Insurance Company (optional):</label>
+                <input type="text" class="form-control" id="insurance_company" name="insurance_company">
             </div>
-            
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="specialty">Specialty:</label>
+                <input type="text" class="form-control" id="specialty" name="specialty" required>
             </div>
-            
-            <button type="submit" class="submit-btn">
-                <span class="button-text">Search</span>
-            </button>
+            <div class="form-group">
+                <label for="procedure">Procedure (optional):</label>
+                <input type="text" class="form-control" id="procedure" name="procedure">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
         <!-- Loading overlay -->

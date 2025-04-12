@@ -12,15 +12,19 @@
         
         <div class="user-info">
             <h2>Search Details</h2>
-            <p>Name: {{ user_name }}</p>
-            <p>Email: {{ email }}</p>
+            <div class="user-details">
+                <p><strong>Postcode:</strong> {{ postcode }}</p>
+                <p><strong>Insurance Company:</strong> {{ insurance_company }}</p>
+                <p><strong>Specialty:</strong> {{ specialty }}</p>
+                <p><strong>Procedure:</strong> {{ procedure }}</p>
+            </div>
         </div>
 
         <div class="results-section">
             <h2>Results</h2>
             <div class="result-card">
-                <p>Matches Found: {{ results.matches_found }}</p>
-                <p>Risk Score: {{ results.score }}%</p>
+                <p><strong>Matches Found:</strong> {{ results.matches_found }}</p>
+                <p><strong>Risk Score:</strong> {{ results.score }}%</p>
                 
                 <h3>Potential Risks:</h3>
                 <ul>
@@ -28,10 +32,12 @@
                     <li>{{ risk }}</li>
                     {% endfor %}
                 </ul>
+                
+                <p><strong>Session ID:</strong> {{ results.session_id }}</p>
             </div>
         </div>
 
-        <a href="/" class="back-btn">New Search</a>
+        <a href="/landing" class="back-btn">New Search</a>
     </div>
 </body>
 </html> 
