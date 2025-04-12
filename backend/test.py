@@ -7,26 +7,38 @@ from portia import (
     MultipleChoiceClarification,
     PlanRunState,
     Portia,
-    PortiaToolRegistry,
-    default_config,
+    example_tool_registry,
 )
+from pydantic import BaseModel
+from registry import custom_tool_registry
 
-class FormData(BaseModel):
+class AppointmentData(BaseModel):
     postcode: str
     insurance_company: str
     specialty: str
     procedure: str
 
-from browser_tool import BrowserTool
-from portia.open_source_tools.search_tool import SearchTool
 load_dotenv()
 
+complete_tool_registry = example_tool_registry + custom_tool_registry
+
+data = AppointmentData(
+    postcode = "NW1 8DU",
+    insurance_company = "",
+    specialty = "cardiologist",
+    procedure = ""
+)
 
 # Instantiate a Portia instance. Load it with the default config and with Portia cloud tools above
-portia = Portia(tools=[SearchTool(),BrowserTool(infrastructure_option="local")])
+portia = Portia(tools=complete_tool_registry)
 
 # Generate the plan from the user query and print it
-plan = portia.plan('Find the PHIN UK homepage url and give me a summary')
+prompt = (
+    f"Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with {data.postcode}, and optional fields following with {data.specialty} and {data.procedure}"
+    f"Obtain a list of potential doctors and use the extracted fields distance, rating, consultation price and specialty"
+    f"Suggest one suitable doctor for the user and include a brief justification"
+)
+plan = portia.plan(prompt)
 print(f"{plan.model_dump_json(indent=2)}")
 
 # Run the plan
