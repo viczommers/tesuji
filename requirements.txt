@@ -1,4 +1,6 @@
 fastapi
+portia_sdk_python
+selenium
 uvicorn[standard]
 gunicorn
 dnspython
