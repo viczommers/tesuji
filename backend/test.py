@@ -1,5 +1,6 @@
 
 from dotenv import load_dotenv
+from typing import Optional
 
 from portia import (
     ActionClarification,
@@ -9,14 +10,13 @@ from portia import (
     Portia,
     example_tool_registry,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel,Field
 from registry import custom_tool_registry
-
 class AppointmentData(BaseModel):
     postcode: str
-    insurance_company: str
-    specialty: str
-    procedure: str
+    insurance_company: str = Field(default="", description="This field is optional")
+    specialty: str = Field(default="", description="This field is optional")
+    procedure: str = Field(default="", description="This field is optional")
 
 load_dotenv()
 
@@ -25,7 +25,7 @@ complete_tool_registry = example_tool_registry + custom_tool_registry
 data = AppointmentData(
     postcode = "NW1 8DU",
     insurance_company = "",
-    specialty = "cardiologist",
+    specialty = "Cardiology",
     procedure = ""
 )
 
@@ -35,7 +35,7 @@ portia = Portia(tools=complete_tool_registry)
 # Generate the plan from the user query and print it
 prompt = (
     f"Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with {data.postcode}, and optional fields following with {data.specialty} and {data.procedure}"
-    f"Obtain a list of potential doctors and use the extracted fields distance, rating, consultation price and specialty"
+    f"Return a list of potential doctors and with the extracted fields distance, rating, consultation price and specialty that are a list of string. Ensure consultation price is low"
     f"Suggest one suitable doctor for the user and include a brief justification"
 )
 plan = portia.plan(prompt)
