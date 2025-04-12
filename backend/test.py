@@ -11,6 +11,12 @@ from portia import (
     default_config,
 )
 
+class FormData(BaseModel):
+    postcode: str
+    insurance_company: str
+    specialty: str
+    procedure: str
+
 from browser_tool import BrowserTool
 from portia.open_source_tools.search_tool import SearchTool
 load_dotenv()
