@@ -62,6 +62,7 @@ while plan_run.state == PlanRunState.NEED_CLARIFICATION:
 
     # Once clarifications are resolved, resume the plan run
     plan_run = portia.resume(plan_run)
+    
 
 # Serialise into JSON and print the output
 print(f"{plan_run.model_dump_json(indent=2)}")

@@ -33,7 +33,7 @@ class PhinTool(Tool[list]):
     output_schema: tuple[str, list[str]] = ("", "")
 
     def run(self, _: ToolRunContext, 
-            postcode: str, insurance_company: str, specialty: str, procedure: str) -> str | list[str]:
+            postcode: str, insurance_company: str = "", specialty: str = "", procedure: str = "") -> str | list[str]:
 
         driver = webdriver.Chrome()
 
@@ -41,27 +41,35 @@ class PhinTool(Tool[list]):
 
         driver.get(url)
 
-        wait = WebDriverWait(driver, 5)
+        wait = WebDriverWait(driver, 10)  # Increased timeout to 10 seconds
+
+        # Wait for and click the cookie button
         cookie_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".button.white.svelte-1j7atkd")))
         cookie_button.click()
         
-        postcode_input = driver.find_element(By.NAME, "location-input")
-        specialty_input = driver.find_element(By.NAME, "specialty-input")
-        procedure_input = driver.find_element(By.NAME, "procedure-input")
-        time.sleep(2)
+        # Wait for input elements to be visible
+        postcode_input = wait.until(EC.visibility_of_element_located((By.NAME, "location-input")))
+        specialty_input = wait.until(EC.visibility_of_element_located((By.NAME, "specialty-input")))
+        procedure_input = wait.until(EC.visibility_of_element_located((By.NAME, "procedure-input")))
+
         postcode_input.send_keys(postcode)
-        time.sleep(2)
+        postcode_input.send_keys(Keys.TAB)
+        postcode_input.send_keys(Keys.ENTER)
         specialty_input.send_keys(specialty)
-        time.sleep(2)
         procedure_input.send_keys(procedure)
 
-        submission_button = driver.find_element(By.CSS_SELECTOR, ".search-button.svelte-1isvcnp")
-        submission_button.click()
-        time.sleep(2)
+        wait.until(lambda driver: postcode_input.get_attribute('value') == postcode)
+        wait.until(lambda driver: specialty_input.get_attribute('value') == specialty)
+        wait.until(lambda driver: procedure_input.get_attribute('value') == procedure)
 
-        doctors_list = driver.find_elements(By.CSS_SELECTOR, ".search-result.svelte-gx346u")
+        # Wait for submission button to be clickable
+        search_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".search-button.svelte-1isvcnp")))
+        search_button.click()
 
-        #Look through each doctor and get their info, adding their data as an object to a list of doctors' data
+        # Wait for search results to be present
+        doctors_list = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".search-result.svelte-gx346u")))
+
+        # Look through each doctor and get their info, adding their data as an object to a list of doctors' data
         doctors = []
 
         for doctor in doctors_list[:10]:
@@ -79,7 +87,9 @@ class PhinTool(Tool[list]):
                     'price': doctor_price
                 }
                 doctors.append(doctor_data)
-            except: pass
+            except Exception as e:
+                print(f"Error extracting data for a doctor: {e}")
+                pass
 
+        driver.quit()
         return doctors
-
