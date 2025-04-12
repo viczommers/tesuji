@@ -20,7 +20,7 @@ load_dotenv()
 portia = Portia(tools=[SearchTool(),BrowserTool(infrastructure_option="local")])
 
 # Generate the plan from the user query and print it
-plan = portia.plan('Find the url of PHIN UK and access the website and return a summary of the front page')
+plan = portia.plan('Find the PHIN UK homepage url and give me a summary')
 print(f"{plan.model_dump_json(indent=2)}")
 
 # Run the plan
