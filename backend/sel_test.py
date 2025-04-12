@@ -2,23 +2,22 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 import time
-import json
 
+options = Options()
+#options.add_argument("--headless=new")  # Keep headless option
 
-postcode="KW17 2ND"
-#postcode="TW20 9LQ"
-specialty="Cardiology"
-procedure=""
+driver = webdriver.Chrome(options=options)
 
-driver = webdriver.Chrome()
+postcode = "KW17 2ND"
+specialty = "Cardiology"
+procedure = ""
 
 url = "https://www.phin.org.uk/"
-
 driver.get(url)
 
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 5)
 
 # Wait for and click the cookie button
 cookie_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".button.white.svelte-1j7atkd")))
@@ -44,23 +43,30 @@ submission_button.click()
 
 time.sleep(1)
 
-doctors_list = driver.find_elements(By.CSS_SELECTOR, ".search-result.svelte-gx346u")
+doctors_list = driver.find_elements(By.XPATH, "//div[@class='search-result svelte-gx346u']")
 
-#Look through each doctor and get their info, adding their data as an object to a list of doctors' data
+# Look through each doctor and get their info, adding their data as an object to a list of doctors' data
 doctors = []
 
 if len(doctors_list) == 0:
-    print("Increasing distance ...")
-    #Increase search radius
-    filter_distance_button = wait.until(EC.element_to_be_clickable((By.ID, "filter-button-distance")))
-    filter_distance_button.click()
+    try:
+        # Increase search radius by clicking the filter buttons
+        filter_distance_button = wait.until(EC.element_to_be_clickable((By.ID, "filter-button-distance")))
+        filter_distance_button.click()
 
-    accept_distance_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".button.blue.svelte-1lakp6")))
-    accept_distance_button.click()
+        accept_distance_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".button.blue.svelte-1lakp6")))
+        accept_distance_button.click()
 
-    time.sleep(0.5)
+        # Allow some time for the new results to load
+        time.sleep(1)
 
-    doctors_list = driver.find_elements(By.CSS_SELECTOR, ".search-result.svelte-gx346u")
+        doctors_list = driver.find_elements(By.XPATH, "//div[@class='search-result svelte-gx346u']")
+        
+        if len(doctors_list) == 0:
+            print("No doctors found after increasing search radius.")
+            # Handle the case where no doctors are found after increasing radius.
+    except Exception as e:
+        print(f"Error while filtering distance: {e}")
 
 for doctor in doctors_list[:10]:
     try:
@@ -77,6 +83,7 @@ for doctor in doctors_list[:10]:
             'price': doctor_price
         }
         doctors.append(doctor_data)
-    except: pass
+    except Exception as e:
+        print(f"Error processing doctor: {e}")
 
 print(doctors)

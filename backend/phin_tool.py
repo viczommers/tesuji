@@ -59,7 +59,6 @@ class PhinTool(Tool[list]):
         submission_button.click()
         time.sleep(1)
 
-        
         doctors_list = driver.find_elements(By.CSS_SELECTOR, ".search-result.svelte-gx346u")
 
         #Look through each doctor and get their info, adding their data as an object to a list of doctors' data
