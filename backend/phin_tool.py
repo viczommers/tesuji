@@ -3,11 +3,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options 
 from pydantic import BaseModel, Field
 from portia.tool import Tool, ToolRunContext
+from random import randint
 import time
-import json
-from selenium.webdriver.chrome.options import Options 
 
 #Define schema
 class PhinToolSchema(BaseModel):
@@ -58,6 +58,7 @@ class PhinTool(Tool[list]):
         postcode_input.send_keys(postcode)
         postcode_input.send_keys(Keys.TAB)
         postcode_input.send_keys(Keys.ENTER)
+        time.sleep(1)
         specialty_input.send_keys(specialty)
         procedure_input.send_keys(procedure)
 
@@ -82,12 +83,20 @@ class PhinTool(Tool[list]):
                 doctor_rating = doctor.find_element(By.CSS_SELECTOR, ".value.svelte-vnlxoq").text
                 doctor_distance = doctor.find_element(By.XPATH, "(//td[@data-description='Distance'])").text
                 doctor_price = doctor.find_element(By.XPATH, "(.//div[@data-description='Fee']//div)").text
+                
+                days_to_appt = randint(1, 30)
+                time_of_appt = randint(9, 16)
+
+                #Available slot in days_to_appt days at time_of_apt o'clock
+                next_availability = (days_to_appt, time_of_appt) 
+                
                 doctor_data = {
                     'name': doctor_name,
                     'specialty': doctor_specialty,
                     'rating': doctor_rating,
                     'distance': doctor_distance,
-                    'price': doctor_price
+                    'price': doctor_price,
+                    'availability': next_availability,
                 }
                 doctors.append(doctor_data)
             except Exception as e:

@@ -35,11 +35,12 @@ portia = Portia(tools=complete_tool_registry)
 # Generate the plan from the user query and print it
 prompt = (
     f"Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with {data.postcode}, and optional fields following with {data.specialty} and {data.procedure}"
-    f"Return a list of potential doctors and with the extracted fields distance, rating, consultation price and specialty that are a list of string. Ensure consultation price is low"
-    f"Suggest one suitable doctor for the user and include a brief justification"
+    f"Return a list of potential doctors and with the extracted fields distance, rating, consultation price, time until next availability, and specialty that are a list of string. Ensure consultation price is low and the time to next availability is not long"
+    f"Suggest the best three suitable doctors for the user and include a brief justification"
+    f"Return the result as a json object with the fields 'Name', 'Specialty', 'Price', 'Availability', 'Rating', and 'Justification', each populated accordingly"
 )
 plan = portia.plan(prompt)
-print(f"{plan.model_dump_json(indent=2)}")
+#print(f"{plan.model_dump_json(indent=2)}")
 
 # Run the plan
 plan_run = portia.run_plan(plan)
@@ -65,4 +66,6 @@ while plan_run.state == PlanRunState.NEED_CLARIFICATION:
     
 
 # Serialise into JSON and print the output
-print(f"{plan_run.model_dump_json(indent=2)}")
+#print(f"{plan_run.model_dump_json(indent=2)}")
+
+final_output = plan_run.outputs.final_output.get_value()
