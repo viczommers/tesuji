@@ -35,10 +35,8 @@ class FormData(BaseModel):
 async def upload(
     data: FormData = Body(...)):
 
-    return {
-        "response" : "uploaded",
-    }
-    """
+    print(data)
+
     # Instantiate a Portia instance. Load it with the default config and with Portia cloud tools above
     portia = Portia(tools=PortiaToolRegistry(default_config()))
 
@@ -70,4 +68,8 @@ async def upload(
 
     # Serialise into JSON and print the output
     print(f"{plan_run.model_dump_json(indent=2)}")
-    """
+
+    return {
+        "response" : "uploaded",
+    }
+    
