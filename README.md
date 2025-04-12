@@ -17,3 +17,7 @@
     npm install # Make sure you have npm installed
     npm run dev
 ```
+
+### Install ChromeDriver
+brew install chromedriver
+brew install chromedriver
