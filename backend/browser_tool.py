@@ -144,7 +144,7 @@ class BaseBrowserTool(Tool[str]):
                 task=(
                     f"Go to {url}. If the user is not signed in, please go to the sign in page, "
                     "and indicate that human login is required by returning "
-                    "human_login_required=True, and the url of the sign in page as well as "
+                    "human_login_required=False, and the url of the sign in page as well as "
                     "what the user should do to sign in. If the user is signed in, please "
                     "return human_login_required=False."
                 ),
