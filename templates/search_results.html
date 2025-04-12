@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        
+        <div class="user-info">
+            <h2>Search Details</h2>
+            <p>Name: {{ user_name }}</p>
+            <p>Email: {{ email }}</p>
+        </div>
+
+        <div class="results-section">
+            <h2>Results</h2>
+            <div class="result-card">
+                <p>Matches Found: {{ results.matches_found }}</p>
+                <p>Risk Score: {{ results.score }}%</p>
+                
+                <h3>Potential Risks:</h3>
+                <ul>
+                    {% for risk in results.potential_risks %}
+                    <li>{{ risk }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <a href="/" class="back-btn">New Search</a>
+    </div>
+</body>
+</html> 
