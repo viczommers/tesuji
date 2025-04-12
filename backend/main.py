@@ -2,6 +2,9 @@ from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+
+from portia.open_source_tools.search_tool import SearchTool
+
 from portia import (
     ActionClarification,
     InputClarification,
@@ -41,7 +44,7 @@ async def upload(
     portia = Portia(tools=PortiaToolRegistry(default_config()))
 
     # Generate the plan from the user query and print it
-    plan = portia.plan('Find the github repository of PortiaAI and give it a star for me')
+    plan = portia.plan('Find the PHIN UK url and return it to me')
     print(f"{plan.model_dump_json(indent=2)}")
 
     # Run the plan
