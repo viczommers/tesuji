@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from portia.tool import Tool, ToolRunContext
 import time
 import json
-
+from selenium.webdriver.chrome.options import Options 
 
 #Define schema
 class PhinToolSchema(BaseModel):
@@ -35,7 +35,10 @@ class PhinTool(Tool[list]):
     def run(self, _: ToolRunContext, 
             postcode: str, insurance_company: str = "", specialty: str = "", procedure: str = "") -> str | list[str]:
 
-        driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+
+        driver = webdriver.Chrome(options=chrome_options)
 
         url = "https://www.phin.org.uk/"
 
