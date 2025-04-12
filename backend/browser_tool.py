@@ -139,6 +139,7 @@ class BaseBrowserTool(Tool[str]):
         llm = model.to_langchain()
 
         async def run_browser_tasks() -> str | ActionClarification:
+            """
             # First auth check
             auth_agent = Agent(
                 task=(
@@ -171,7 +172,7 @@ class BaseBrowserTool(Tool[str]):
                     ),
                     plan_run_id=ctx.plan_run_id,
                 )
-
+            """
             # Main task
             task_agent = Agent(
                 task=task,

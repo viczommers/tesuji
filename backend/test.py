@@ -11,6 +11,12 @@ from portia import (
     default_config,
 )
 
+class FormData(BaseModel):
+    postcode: str
+    insurance_company: str
+    specialty: str
+    procedure: str
+
 from browser_tool import BrowserTool
 from portia.open_source_tools.search_tool import SearchTool
 load_dotenv()
@@ -20,7 +26,7 @@ load_dotenv()
 portia = Portia(tools=[SearchTool(),BrowserTool(infrastructure_option="local")])
 
 # Generate the plan from the user query and print it
-plan = portia.plan('Find the homepage url of PHIN UK and access the website and return a summary of the homepage')
+plan = portia.plan('Find the PHIN UK homepage url and give me a summary')
 print(f"{plan.model_dump_json(indent=2)}")
 
 # Run the plan
