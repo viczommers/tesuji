@@ -3,29 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
+    <title>Best Doctors Around You!</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <!-- Add jQuery and jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(function() {
+            $("#date-input").datepicker(); // Initialize datepicker on the input
+        });
+    </script>
 </head>
-<body>
+<body style="display: flex;justify-content: flex-start;align-items: flex-start;">
     <div class="container">
-        <h1>Search Results</h1>
+        <!-- <h1></h1> -->
         
         <div class="user-info">
-            <h2>Search Details</h2>
+            <h2 style="color: black;">Your Details</h2>
             <div class="user-details">
                 <p><strong>Postcode:</strong> {{ postcode }}</p>
                 <p><strong>Insurance Company:</strong> {{ insurance_company }}</p>
                 <p><strong>Specialty:</strong> {{ specialty }}</p>
                 <p><strong>Procedure:</strong> {{ procedure }}</p>
+                <!-- Add date input field -->
+                <p><strong>Select Date:</strong> <input type="text" id="date-input"></p>
             </div>
         </div>
 
         <div class="results-section">
-            <h2>Results</h2>
+            <h2 style="color: black;">Results</h2>
+            {% if results.booking_slot %}
+            <div class="booking-slots">
+                {% for slot in results.booking_slot %}
+                <button class="doctor-card-button" style="width: 100%;" onclick="window.open('/success', '_self')">
+                    <div class="doctor-card">
+                        <div class="doctor-details">
+                            {% if slot.get('Name') %}
+                            <h3>{{ slot.Name }}</h3>
+                            {% endif %}
+                            {% if slot.get('Specialty') %}
+                            <p><strong>Specialty:</strong> {{ slot.Specialty }}</p>
+                            {% endif %}
+                            
+                            {% if slot.get('Price') %}
+                            <p><strong>Price:</strong> {{ slot.Price }}</p>
+                            {% endif %}
+                            
+                            {% if slot.get('Availability') %}
+                            <p><strong>Availability:</strong> {{ slot.Availability }}</p>
+                            {% endif %}
+                            
+                            {% if slot.get('Rating') %}
+                            <p><strong>Rating:</strong> {{ slot.Rating }}</p>
+                            {% endif %}
+                            
+                            {% if slot.get('Justification') %}
+                            <p><strong>Justification:</strong> {{ slot.Justification }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </button>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="result-card">
-                <p>{{ results.booking_slot }}</p>
                 <p><strong>Matches Found:</strong> {{ results.matches_found }}</p>
-                <p><strong>Risk Score:</strong> {{ results.score }}%</p>
+                <!-- <p><strong>Risk Score:</strong> {{ results.score }}%</p>
                 
                 <h3>Potential Risks:</h3>
                 <ul>
@@ -33,12 +77,12 @@
                     <li>{{ risk }}</li>
                     {% endfor %}
                 </ul>
-                
-                <p><strong>Session ID:</strong> {{ results.session_id }}</p>
+                 -->
+                <p><strong>Pre-Authorisation Number:</strong> {{ results.session_id }}</p>
             </div>
         </div>
 
-        <a href="/landing" class="back-btn">New Search</a>
+        <a href="/landing" class="back-btn" style="width: 100%;">New Search</a>
     </div>
 </body>
 </html> 

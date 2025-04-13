@@ -12,29 +12,8 @@ python-multipart
 authlib
 httpx
 
-#graphs plotting
-matplotlib
-
-# Additional dependencies for data
-pandas[parquet, feather, spss, excel]
-openai
-pinecone-client
-tiktoken
-
-# pypdf
-
-#blob
-azure-storage-blob 
-azure-identity
-
 # markdown
 markdown
 
 # aiohttp
 aiohttp
-
-# AI
-groq
-
-# Email
-sendgrid

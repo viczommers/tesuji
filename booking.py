@@ -1,4 +1,4 @@
-
+from config import PORTIA_API_KEY, AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT
 from dotenv import load_dotenv
 from typing import Optional
 
@@ -25,34 +25,33 @@ load_dotenv()
 
 complete_tool_registry = example_tool_registry + custom_tool_registry
 
-data = AppointmentData(
-    postcode = "NW1 8DU",
-    insurance_company = "",
-    specialty = "Cardiology",
-    procedure = ""
-)
 
-# Instantiate a Portia instance. Load it with the default config and with Portia cloud tools above
-portia = Portia(tools=complete_tool_registry,
-                config=Config(storage_class=StorageClass.DISK,
-                              storage_dir="./logging_dump",
-                              llm_provider=LLMProvider.AZURE_OPENAI,
-                              default_log_sink="output.txt",
-                              azure_openai_api_key="9nJVn32m8BdX6MzQQUljGD3P14uYdSHujzaXYz9i4CXn6duklDPCJQQJ99BDACYeBjFXJ3w3AAAAACOGN3bw",
-                              azure_openai_endpoint="https://encode-hackathon-secret.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview",
+def book_appointment(postcode, insurance_company, specialty, procedure):
+    data = AppointmentData(
+        postcode=postcode if postcode is not None else "",
+        insurance_company=insurance_company if insurance_company is not None else "",
+        specialty=specialty if specialty is not None else "",
+        procedure=procedure if procedure is not None else "",
+    )
+
+    # Instantiate a Portia instance. Load it with the default config and with Portia cloud tools above
+    portia = Portia(tools=complete_tool_registry,
+                    config=Config(storage_class=StorageClass.DISK,
+                                storage_dir="./logging_dump",
+                                llm_provider=LLMProvider.AZURE_OPENAI,
+                                default_log_sink="output.txt",
+                                azure_openai_api_key=AZURE_OPENAI_API_KEY,
+                                azure_openai_endpoint=AZURE_OPENAI_ENDPOINT,
+                        )
                     )
-                )
 
-# Generate the plan from the user query and print it
-prompt = (
-    f"Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with {data.postcode}, and optional fields following with {data.specialty} and {data.procedure}"
-    f"Return a list of potential doctors and with the extracted fields distance, rating, consultation price, time until next availability, and specialty that are a list of string. Ensure consultation price is low and the time to next availability is not long"
-    f"Suggest the best three suitable doctors for the user and include a brief justification"
-    f"Return the result as a json object with the fields 'Name', 'Specialty', 'Price', 'Availability', 'Rating', and 'Justification', each populated accordingly"
-)
-
-
-def book_appointment():
+    # Generate the plan from the user query and print it
+    prompt = (
+        f"Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with {data.postcode}, and optional fields following with {data.specialty} and {data.procedure}"
+        f"Return a list of potential doctors and with the extracted fields distance, rating, consultation price, time until next availability, and specialty that are a list of string. Ensure consultation price is low and the time to next availability is not long"
+        f"Suggest the best three suitable doctors for the user and include a brief justification"
+        f"Return the result as a json object with the fields 'Name', 'Specialty', 'Price', 'Availability', 'Rating', and 'Justification', each populated accordingly"
+    )
     plan = portia.plan(prompt)
     #print(f"{plan.model_dump_json(indent=2)}")
     # Run the plan

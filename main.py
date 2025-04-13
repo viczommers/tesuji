@@ -6,6 +6,7 @@ import aiohttp
 import asyncio
 import uvicorn
 import json
+import re
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sse_starlette.sse import EventSourceResponse
@@ -14,7 +15,7 @@ from fastapi.templating import Jinja2Templates
 from typing import Optional
 from pydantic import BaseModel
 
-from test import book_appointment
+from booking import book_appointment
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
@@ -34,7 +35,7 @@ async def lifespan(app: FastAPI):
 
 async def stream_logs():
     print("Streaming logs...")
-    log_dir = BASE_DIR / "logging_dump"
+    log_dir = BASE_DIR / "plan_cache"
     
     if not log_dir.is_dir():
         yield f"data: The directory {log_dir} does not exist.\n\n"
@@ -113,19 +114,37 @@ async def search_results(
     }
 
     # Dummy search function that simulates processing time
-    async def perform_dummy_search(postcode: str, specialty: str) -> dict:
-        await asyncio.sleep(2)  # Simulate processing time
-        dummy_output = book_appointment()
+    async def perform_search(postcode: str, specialty: str, insurance_company: str | None, procedure: str | None) -> dict:
+        book_output = book_appointment(postcode, insurance_company, specialty, procedure) 
+        pattern = r'```json\n(.*?)\n```'
+        match = re.search(pattern, book_output, re.DOTALL)
+        if match:
+            json_content = match.group(1).strip()  # Extract and strip whitespace from the JSON content
+            print(f"Extracted JSON content: {json_content}")  # Debugging statement
+            try:
+                # Parse the JSON content
+                data = json.loads(json_content)
+                return {
+                    "matches_found": 3,
+                    "potential_risks": [],
+                    "score": None,
+                    "session_id": session_id,
+                    "booking_slot": data
+                }
+            except json.JSONDecodeError as e:
+                print(f"Error decoding JSON: {e}")
+        else:
+            print("No JSON content found.")
         return {
             "matches_found": 3,
-            "potential_risks": ["Risk A", "Risk B"],
-            "score": 85.5,
+            "potential_risks": [],
+            "score": None,
             "session_id": session_id,
-            "booking_slot": dummy_output
+            "booking_slot": None
         }
     
     # Perform the search
-    search_results = await perform_dummy_search(postcode, specialty)
+    search_results = await perform_search(postcode, specialty, insurance_company, procedure)
     
     response = templates.TemplateResponse(
         "search_results.html",
@@ -146,6 +165,14 @@ async def search_results(
 @app.get("/stream-logs")
 async def stream_logs_endpoint():
     return EventSourceResponse(stream_logs())
+
+@app.get("/success", response_class=HTMLResponse)
+async def success_page(request: Request):
+    """Render the success page"""
+    return templates.TemplateResponse(
+        "success.html",
+        {"request": request}
+    )
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
