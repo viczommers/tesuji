@@ -35,7 +35,7 @@ async def lifespan(app: FastAPI):
 
 async def stream_logs():
     print("Streaming logs...")
-    log_dir = BASE_DIR / "plan_cache"
+    log_dir = BASE_DIR / "logging_dump"
     
     if not log_dir.is_dir():
         yield f"data: The directory {log_dir} does not exist.\n\n"
