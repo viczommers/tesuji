@@ -4,8 +4,14 @@ Eight million patients are waiting for NHS treatment or therapy, and the waiting
 The problem is accessing affordable care. This project's ultimate goal is two-fold:
 1. Help patients find and book an insurance-approved doctor and, for self-funded patients, get the best price. 
 2. Reduce unnecessary administration delays in invoicing and payments for doctors and de-incentivising preference for booking self-pay patients. 
- 
-<a href="#technical-set-up">Skip straight to the technical set-up instructions</a>
+
+## Table of contents
+- [Problems in the Private Healthcare Process](#problems-in-the-private-healthcare-process)
+- [Solution using Portia AI](#solution-using-portia-ai)
+- [How we used the Portia agent framework](#how-we-used-the-portia-agent-framework)
+- [Proof of Concept](#proof-of-concept)
+- [Use of Portia AI](#use-of-portia-ai)
+- [Technical Setup](#technical-setup)
 
 ## Problems in the Private Healthcare Process
 ### Appointment Booking
@@ -42,7 +48,7 @@ Our goal in this project was to solve several of these specific pain points usin
 - Speed up appointment booking process, giving patients a single platform to efficiently find a suitable doctor, taking into account location, specialty, and price, and ordering in an intelligent way
 - Help doctors by reducing shortfall from insurers and being paid more quickly
 
-## How we used the Portia agent framework to improve:
+## How we used the Portia agent framework
 ### Appointment Booking
 1. Patient goes to the Tempus Cura platform
 2. Patient enters postcode, insurance company (unless self-paying), specialty, and procedure and clicks "Search Doctors"
@@ -67,8 +73,6 @@ Our goal in this project was to solve several of these specific pain points usin
 
 ## Proof-Of-Concept
 Our current proof-of-concept does not achieve all the above proposed processes. It currently supports self-paying patients and utilises the generic PHIN platform to search for suitable doctors to get patients the nearest, best-priced, and earliest available appointment.
-
-
 
 ## Use of Portia AI
 In our proof-of-concept application, Portia AI is used in the appointment booking process to gather relevant doctors for a given patient using the PHIN platform, which then hands off to the patient user to decide which to book (potentially automate contact process with doctors using Portia AI, but initially providing a more relevant list of doctors to patients to which they could manually call).
