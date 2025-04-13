@@ -71,4 +71,5 @@ def book_appointment():
     #print(f"{plan_run.model_dump_json(indent=2)}")
 
     final_output = plan_run.outputs.final_output.get_value()
+    print(final_output)
     return final_output

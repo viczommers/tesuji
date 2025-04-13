@@ -12,6 +12,10 @@ from fastapi.templating import Jinja2Templates
 from typing import Optional
 from pydantic import BaseModel
 
+
+
+from test import book_appointment
+
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 TEMPLATES_DIR = BASE_DIR / "templates"
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
@@ -64,11 +68,13 @@ async def search_results(
     # Dummy search function that simulates processing time
     async def perform_dummy_search(postcode: str, specialty: str) -> dict:
         await asyncio.sleep(2)  # Simulate processing time
+        dummy_output = book_appointment()
         return {
             "matches_found": 3,
             "potential_risks": ["Risk A", "Risk B"],
             "score": 85.5,
-            "session_id": session_id
+            "session_id": session_id,
+            "booking_slot": dummy_output
         }
     
     # Perform the search
