@@ -1,0 +1,45 @@
+{
+    "id": "plan-852e450b-57fa-4bd3-b92d-ece4ed124580",
+    "plan_context": {
+        "query": "Use PhinTool to navigate to the website and fill in the fields with mandatory field postcode with NW1 8DU, and optional fields following with Cardiology and Return a list of potential doctors and with the extracted fields distance, rating, consultation price, time until next availability, and specialty that are a list of string. Ensure consultation price is low and the time to next availability is not longSuggest the best three suitable doctors for the user and include a brief justificationReturn the result as a json object with the fields 'Name', 'Specialty', 'Price', 'Availability', 'Rating', and 'Justification', each populated accordingly",
+        "tool_ids": [
+            "calculator_tool",
+            "phin_tool",
+            "search_tool",
+            "weather_tool"
+        ]
+    },
+    "steps": [
+        {
+            "task": "Use the PHIN UK site to fetch data for postcode NW1 8DU, specialty Cardiology, and return the list of potential doctors with extracted fields: distance, rating, consultation price, time until next availability, and specialty.",
+            "inputs": [],
+            "tool_id": "phin_tool",
+            "output": "$phin_data",
+            "condition": null
+        },
+        {
+            "task": "Filter the list of doctors from the input ($phin_data) to identify the best three suitable doctors. Ensure consultation price is low and the time to next availability is not long. Include a brief justification for each doctor.",
+            "inputs": [
+                {
+                    "name": "$phin_data",
+                    "description": "Data fetched from PHIN UK about potential doctors including distance, rating, consultation price, time until next availability, and specialty."
+                }
+            ],
+            "tool_id": "llm_tool",
+            "output": "$best_doctors",
+            "condition": null
+        },
+        {
+            "task": "Format the best three suitable doctors into a JSON object with fields 'Name', 'Specialty', 'Price', 'Availability', 'Rating', and 'Justification' using the input ($best_doctors).",
+            "inputs": [
+                {
+                    "name": "$best_doctors",
+                    "description": "The filtered list of the top three suitable doctors with justifications."
+                }
+            ],
+            "tool_id": "llm_tool",
+            "output": "$formatted_result",
+            "condition": null
+        }
+    ]
+}

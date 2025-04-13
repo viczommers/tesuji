@@ -9,6 +9,9 @@ from portia import (
     PlanRunState,
     Portia,
     example_tool_registry,
+    Config,
+    StorageClass,
+    LLMProvider
 )
 from pydantic import BaseModel,Field
 from registry import custom_tool_registry
@@ -30,7 +33,15 @@ data = AppointmentData(
 )
 
 # Instantiate a Portia instance. Load it with the default config and with Portia cloud tools above
-portia = Portia(tools=complete_tool_registry)
+portia = Portia(tools=complete_tool_registry,
+                config=Config(storage_class=StorageClass.DISK,
+                              storage_dir="./logging_dump",
+                              llm_provider=LLMProvider.AZURE_OPENAI,
+                              default_log_sink="output.txt",
+                              azure_openai_api_key="9nJVn32m8BdX6MzQQUljGD3P14uYdSHujzaXYz9i4CXn6duklDPCJQQJ99BDACYeBjFXJ3w3AAAAACOGN3bw",
+                              azure_openai_endpoint="https://encode-hackathon-secret.cognitiveservices.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview",
+                    )
+                )
 
 # Generate the plan from the user query and print it
 prompt = (
@@ -45,6 +56,7 @@ def book_appointment():
     plan = portia.plan(prompt)
     #print(f"{plan.model_dump_json(indent=2)}")
     # Run the plan
+    print(f"Running plan {plan.id}")
     plan_run = portia.run_plan(plan)
 
     while plan_run.state == PlanRunState.NEED_CLARIFICATION:

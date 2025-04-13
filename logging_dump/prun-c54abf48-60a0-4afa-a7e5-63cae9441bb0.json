@@ -1,0 +1,17 @@
+{
+    "id": "prun-c54abf48-60a0-4afa-a7e5-63cae9441bb0",
+    "plan_id": "plan-5532ef5e-5f3c-4886-9b73-6ce8228301ff",
+    "current_step_index": 0,
+    "state": "IN_PROGRESS",
+    "execution_context": {
+        "end_user_id": null,
+        "additional_data": {},
+        "planning_agent_system_context_extension": null,
+        "execution_agent_system_context_extension": null
+    },
+    "outputs": {
+        "clarifications": [],
+        "step_outputs": {},
+        "final_output": null
+    }
+}
