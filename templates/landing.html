@@ -1,18 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Search</title>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/flatly/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet">
 </head>
+
 <body>
+    <header>
+        <div class="container-header">
+            <button class="logo-img-button" onclick="window.open('/', '_self')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="55" height="80" fill="none">
+                    <g stroke="#000000" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Outer circle boundary -->
+                        <circle cx="50" cy="50" r="47" stroke="#000000" stroke-width="7" />
+
+                        <!-- Central rod -->
+                        <line x1="50" y1="10" x2="50" y2="90" />
+
+                        <!-- Snake (more detailed undulations) -->
+                        <path d="M50 18
+                               C64 18, 64 30, 50 30
+                               C36 30, 36 42, 50 42
+                               C64 42, 64 54, 50 54
+                               C36 54, 36 66, 50 66
+                               C64 66, 64 78, 50 78" />
+
+                        <!-- Snake head -->
+                        <circle cx="50" cy="78" r="3" fill="#00BFFF" />
+                    </g>
+                </svg>
+
+            </button>
+            <div class="logo-text" style="user-select: none;">
+                <span>TEMPUS CURA</span>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
         <h1>User Search</h1>
         <div class="search-description">
             <p>Enter user details to perform a comprehensive search</p>
         </div>
-        
+
         <form action="/search" method="post">
             <div class="form-group">
                 <label for="postcode">Postcode:</label>
@@ -41,10 +78,10 @@
     </div>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
+        document.querySelector('form').addEventListener('submit', function (e) {
             // Show loading overlay
             document.getElementById('loadingOverlay').style.display = 'flex';
-            
+
             // Disable the submit button
             const btn = this.querySelector('button');
             btn.disabled = true;
@@ -52,4 +89,5 @@
         });
     </script>
 </body>
-</html> 
+
+</html>
