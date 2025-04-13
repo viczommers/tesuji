@@ -44,11 +44,11 @@ Our goal in this project was to solve several of these specific pain points usin
 - Speed up appointment booking process, giving patients a single platform to efficiently find a suitable doctor, taking into account location, specialty, and price, and ordering in an intelligent way
 - Help doctors by reducing shortfall from insurers and being paid more quickly
 
-## Proposed Process
+## How we used the Portia agent framework to improve:
 ### Appointment Booking
 1. Patient goes to the Tempus Cura platform
 2. Patient enters postcode, insurance company (unless self-paying), specialty, and procedure and clicks "Search Doctors"
-3. If the patient is insured, the Portia agent calls the associated insurance company call centre (Portia ZenDesk plugin) to verify the terms of the insurance policy to get a pre-authorisation code
+3. If the patient is insured, the Portia agent could use the ZendDesk plugin to call the associated insurance company's call centre to verify the terms of the insurance policy to get a pre-authorisation code
 3. The Portia agent uses a generic doctor search tool on the PHIN website (portal for private healthcare information and doctors) (using browser tool) or a specific insurance company's doctor finder and returns a list of nearby and available doctors who the patient's insurance company approves
 4. Patient chooses preferred doctor and appointment day/time (potential use of Google Workspace for accessing doctors' calendars)
 5. Portia agent prompts doctor to approve appointment request
@@ -69,6 +69,8 @@ Our goal in this project was to solve several of these specific pain points usin
 
 ## Proof-Of-Concept
 Our current proof-of-concept does not achieve all the above proposed processes. It currently supports self-paying patients and utilises the generic PHIN platform to search for suitable doctors to get patients the nearest, best-priced, and earliest available appointment.
+
+
 
 ## Use of Portia AI
 In our proof-of-concept application, Portia AI is used in the appointment booking process to gather relevant doctors for a given patient using the PHIN platform, which then hands off to the patient user to decide which to book (potentially automate contact process with doctors using Portia AI, but initially providing a more relevant list of doctors to patients to which they could manually call).
